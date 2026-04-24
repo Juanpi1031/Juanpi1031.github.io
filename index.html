@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Juan Pablo Paredes — Frontend Developer</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;800&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --border: #21262d;
+      --border2: #30363d;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --accent: #58a6ff;
+      --green: #3fb950;
+      --mono: 'DM Mono', monospace;
+      --sans: 'Syne', sans-serif;
+    }
+ 
+    html { scroll-behavior: smooth; }
+ 
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+ 
+    /* grid bg */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(88,166,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(88,166,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+ 
+    .container {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+ 
+    /* NAV */
+    nav {
+      padding: 24px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 0.5px solid var(--border);
+      margin-bottom: 80px;
+    }
+ 
+    .nav-logo {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--accent);
+      letter-spacing: 0.05em;
+    }
+ 
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      list-style: none;
+    }
+ 
+    .nav-links a {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+ 
+    .nav-links a:hover { color: var(--text); }
+ 
+    /* HERO */
+    .hero {
+      margin-bottom: 96px;
+      opacity: 0;
+      animation: fadeUp 0.7s ease forwards;
+    }
+ 
+    .hero-tag {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--green);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+ 
+    .hero-tag::before {
+      content: '';
+      width: 24px;
+      height: 1px;
+      background: var(--green);
+      display: inline-block;
+    }
+ 
+    .avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--mono);
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--accent);
+      margin-bottom: 28px;
+    }
+ 
+    .hero h1 {
+      font-size: clamp(36px, 6vw, 56px);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 20px;
+      letter-spacing: -0.02em;
+    }
+ 
+    .hero h1 span { color: var(--accent); }
+ 
+    .hero-bio {
+      font-size: 16px;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 520px;
+      margin-bottom: 32px;
+    }
+ 
+    .hero-bio strong { color: var(--text); font-weight: 600; }
+ 
+    .hero-quote {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--border2);
+      border-left: 2px solid var(--border2);
+      padding-left: 16px;
+      margin-bottom: 36px;
+      font-style: italic;
+    }
+ 
+    .hero-meta {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+ 
+    .meta-item {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+ 
+    .meta-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+    }
+ 
+    /* SECTIONS */
+    section {
+      margin-bottom: 80px;
+      opacity: 0;
+      animation: fadeUp 0.7s ease forwards;
+    }
+ 
+    section:nth-child(2) { animation-delay: 0.1s; }
+    section:nth-child(3) { animation-delay: 0.2s; }
+    section:nth-child(4) { animation-delay: 0.3s; }
+    section:nth-child(5) { animation-delay: 0.4s; }
+ 
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+ 
+    .section-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+ 
+    .section-line {
+      flex: 1;
+      height: 0.5px;
+      background: var(--border);
+    }
+ 
+    /* STACK */
+    .stack-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+ 
+    .badge {
+      font-family: var(--mono);
+      font-size: 12px;
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: 0.5px solid var(--border2);
+      background: var(--surface);
+      color: var(--muted);
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+ 
+    .badge:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(88,166,255,0.05);
+    }
+ 
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+ 
+    /* PROJECTS */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+ 
+    @media (max-width: 520px) {
+      .projects-grid { grid-template-columns: 1fr; }
+    }
+ 
+    .project-card {
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      text-decoration: none;
+      display: block;
+      transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+ 
+    .project-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+ 
+    .project-card:hover {
+      border-color: var(--border2);
+      transform: translateY(-2px);
+    }
+ 
+    .project-card:hover::before { opacity: 1; }
+ 
+    .project-name {
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+ 
+    .project-desc {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+      margin-bottom: 14px;
+    }
+ 
+    .project-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+ 
+    .project-lang {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+    }
+ 
+    .lang-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+ 
+    .project-arrow {
+      font-size: 12px;
+      color: var(--border2);
+      transition: color 0.2s;
+    }
+ 
+    .project-card:hover .project-arrow { color: var(--accent); }
+ 
+    /* LEARNING */
+    .learning-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+ 
+    .learning-badge {
+      font-family: var(--mono);
+      font-size: 12px;
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: 0.5px solid #238636;
+      background: #0d2218;
+      color: var(--green);
+    }
+ 
+    /* CONTACT */
+    .contact-links {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+ 
+    .contact-link {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--muted);
+      text-decoration: none;
+      border: 0.5px solid var(--border2);
+      border-radius: 8px;
+      padding: 10px 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+      background: var(--surface);
+    }
+ 
+    .contact-link:hover {
+      color: var(--text);
+      border-color: var(--accent);
+      background: rgba(88,166,255,0.05);
+    }
+ 
+    /* FOOTER */
+    footer {
+      border-top: 0.5px solid var(--border);
+      padding: 28px 0;
+      margin-top: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+ 
+    .footer-text {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--border2);
+    }
+ 
+    .footer-text span { color: var(--muted); }
+ 
+    /* ANIMATION */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+ 
+<div class="container">
+ 
+  <nav>
+    <span class="nav-logo">juanpi1031</span>
+    <ul class="nav-links">
+      <li><a href="#projects">projects</a></li>
+      <li><a href="#stack">stack</a></li>
+      <li><a href="#contact">contact</a></li>
+    </ul>
+  </nav>
+ 
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-tag">available for projects</div>
+    <div class="avatar">JP</div>
+    <h1>Juan Pablo<br/><span>Paredes.</span></h1>
+    <p class="hero-bio">
+      <strong>Frontend developer</strong> and <strong>Software Engineering student</strong>
+      from Tungurahua, Ecuador. Focused on building interfaces that feel right —
+      clean, fast, and purposeful.
+    </p>
+    <p class="hero-quote">"Always learning, always building"</p>
+    <div class="hero-meta">
+      <span class="meta-item"><span class="meta-dot"></span>Tungurahua, Ecuador</span>
+      <span class="meta-item"><span class="meta-dot"></span>Software Engineering</span>
+      <span class="meta-item"><span class="meta-dot"></span>Open to collaborate</span>
+    </div>
+  </div>
+ 
+  <!-- STACK -->
+  <section id="stack">
+    <div class="section-header">
+      <span class="section-label">stack</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="stack-grid">
+      <div class="badge"><span class="badge-dot" style="background:#e34f26"></span>HTML</div>
+      <div class="badge"><span class="badge-dot" style="background:#1572b6"></span>CSS</div>
+      <div class="badge"><span class="badge-dot" style="background:#f7df1e"></span>JavaScript</div>
+      <div class="badge"><span class="badge-dot" style="background:#61dafb"></span>React</div>
+      <div class="badge"><span class="badge-dot" style="background:#3fb950"></span>Node.js</div>
+      <div class="badge"><span class="badge-dot" style="background:#f05032"></span>Git</div>
+    </div>
+  </section>
+ 
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="section-header">
+      <span class="section-label">projects</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="projects-grid">
+      <a href="https://github.com/Juanpi1031/Cuyabeno-Wildlife-Center" target="_blank" class="project-card">
+        <div class="project-name">Cuyabeno Wildlife Center</div>
+        <div class="project-desc">Wildlife center web platform.</div>
+        <div class="project-footer">
+          <div class="project-lang"><div class="lang-dot" style="background:#f7df1e"></div>JavaScript</div>
+          <span class="project-arrow">↗</span>
+        </div>
+      </a>
+      <a href="https://github.com/Juanpi1031/Factura-APP" target="_blank" class="project-card">
+        <div class="project-name">Factura App</div>
+        <div class="project-desc">Full billing application.</div>
+        <div class="project-footer">
+          <div class="project-lang"><div class="lang-dot" style="background:#61dafb"></div>React</div>
+          <span class="project-arrow">↗</span>
+        </div>
+      </a>
+      <a href="https://github.com/Juanpi1031/Factura-Frontend" target="_blank" class="project-card">
+        <div class="project-name">Factura Frontend</div>
+        <div class="project-desc">Frontend for the billing system.</div>
+        <div class="project-footer">
+          <div class="project-lang"><div class="lang-dot" style="background:#61dafb"></div>React</div>
+          <span class="project-arrow">↗</span>
+        </div>
+      </a>
+      <a href="https://github.com/Juanpi1031/Factura-Backend" target="_blank" class="project-card">
+        <div class="project-name">Factura Backend</div>
+        <div class="project-desc">REST API for the billing system.</div>
+        <div class="project-footer">
+          <div class="project-lang"><div class="lang-dot" style="background:#3fb950"></div>Node.js</div>
+          <span class="project-arrow">↗</span>
+        </div>
+      </a>
+      <a href="https://github.com/Juanpi1031/Comandos_Basicos" target="_blank" class="project-card">
+        <div class="project-name">Comandos Basicos</div>
+        <div class="project-desc">Basic dev commands reference.</div>
+        <div class="project-footer">
+          <div class="project-lang"><div class="lang-dot" style="background:#8b949e"></div>Markdown</div>
+          <span class="project-arrow">↗</span>
+        </div>
+      </a>
+    </div>
+  </section>
+ 
+  <!-- LEARNING -->
+  <section>
+    <div class="section-header">
+      <span class="section-label">currently learning</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="learning-grid">
+      <span class="learning-badge">TypeScript</span>
+      <span class="learning-badge">Next.js</span>
+      <span class="learning-badge">Python</span>
+      <span class="learning-badge">PostgreSQL</span>
+    </div>
+  </section>
+ 
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="section-header">
+      <span class="section-label">contact</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="contact-links">
+      <a href="https://www.linkedin.com/in/juan-pablo-paredes-caicedo-94a494296" target="_blank" class="contact-link">
+        💼 LinkedIn
+      </a>
+      <a href="https://www.instagram.com/juanpi.31_" target="_blank" class="contact-link">
+        📸 Instagram
+      </a>
+      <a href="https://github.com/Juanpi1031" target="_blank" class="contact-link">
+        🐙 GitHub
+      </a>
+    </div>
+  </section>
+ 
+  <footer>
+    <span class="footer-text">© 2026 <span>Juan Pablo Paredes</span></span>
+    <span class="footer-text"><span>Tungurahua, Ecuador</span></span>
+  </footer>
+ 
+</div>
+ 
+</body>
+</html>
